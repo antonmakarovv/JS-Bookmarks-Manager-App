@@ -1,18 +1,18 @@
-const mainSection = document.getElementById('main-section');
-const categorySelect = document.getElementById('category-dropdown');
-const options = document.querySelectorAll('option');
-const viewCategoryBtn = document.getElementById('view-category-button'); 
-const addBookmarkBtn = document.getElementById('add-bookmark-button');
-const formSection = document.getElementById('form-section'); 
-const nameInput = document.getElementById('name');
-const urlInput = document.getElementById('url');
-const closeFormBtn = document.getElementById('close-form-button'); 
-const addBookmarkBtnForm = document.getElementById('add-bookmark-button-form'); 
-const bookmarkList = document.getElementById('bookmark-list-section'); 
+const mainSection = document.getElementById("main-section");
+const categorySelect = document.getElementById("category-dropdown");
+const options = document.querySelectorAll("option");
+const viewCategoryBtn = document.getElementById("view-category-button");
+const addBookmarkBtn = document.getElementById("add-bookmark-button");
+const formSection = document.getElementById("form-section");
+const nameInput = document.getElementById("name");
+const urlInput = document.getElementById("url");
+const closeFormBtn = document.getElementById("close-form-button");
+const addBookmarkBtnForm = document.getElementById("add-bookmark-button-form");
+const bookmarkList = document.getElementById("bookmark-list-section");
 const categoryHeading = document.querySelectorAll(".category-name");
-const categoryList = document.getElementById('category-list'); 
-const closeListBtn = document.getElementById('close-list-button'); 
-const deleteBookmarkBtn = document.getElementById('delete-bookmark-button');    
+const categoryList = document.getElementById("category-list");
+const closeListBtn = document.getElementById("close-list-button");
+const deleteBookmarkBtn = document.getElementById("delete-bookmark-button");
 
 const getBookmarks = () => {
   try {
@@ -34,38 +34,44 @@ const getBookmarks = () => {
   }
 };
 
-let bookmarksData = getBookmarks(); 
+let bookmarksData = getBookmarks();
 
 const displayOrCloseForm = () => {
-  mainSection.classList.toggle('hidden');
-  formSection.classList.toggle('hidden');
-}
+  mainSection.classList.toggle("hidden");
+  formSection.classList.toggle("hidden");
+};
 
 const updateBookmarks = () => {
   const bookmark = {
     name: nameInput.value,
-    category: categorySelect.value, 
+    category: categorySelect.value,
     url: urlInput.value,
-  }
-  localStorage.setItem("bookmarks", JSON.stringify(getBookmarks().concat(bookmark)))
-}
+  };
+  localStorage.setItem(
+    "bookmarks",
+    JSON.stringify(getBookmarks().concat(bookmark)),
+  );
+};
 
 const reset = () => {
-  nameInput.value = '';
-  urlInput.value = '';
-}
+  nameInput.value = "";
+  urlInput.value = "";
+};
 
 const displayOrHideCategory = () => {
-  mainSection.classList.toggle('hidden');
-  bookmarkList.classList.toggle('hidden');
-}
+  mainSection.classList.toggle("hidden");
+  bookmarkList.classList.toggle("hidden");
+};
 
 const fillBookmarkList = () => {
-  categoryHeading[1].innerText = categorySelect.value.charAt(0).toUpperCase()
-    + categorySelect.value.slice(1);
-  const bookmarksToDisplay = getBookmarks().filter((i) => i.category === categorySelect.value);
+  categoryHeading[1].innerText =
+    categorySelect.value.charAt(0).toUpperCase() +
+    categorySelect.value.slice(1);
+  const bookmarksToDisplay = getBookmarks().filter(
+    (i) => i.category === categorySelect.value,
+  );
   if (bookmarksToDisplay.length) {
-    categoryList.innerHTML = '';
+    categoryList.innerHTML = "";
     for (const bookmark of bookmarksToDisplay) {
       categoryList.innerHTML += `
         <div>
@@ -73,61 +79,64 @@ const fillBookmarkList = () => {
         <label for="${bookmark.name}">
           <a href="${bookmark.url}">${bookmark.name}</a>
         </label>
-        </div>`
-        }
+        </div>`;
+    }
   } else {
-    categoryList.innerHTML = '<p>No Bookmarks Found</p>';
+    categoryList.innerHTML = "<p>No Bookmarks Found</p>";
   }
-}
+};
 
 const deleteBookmark = () => {
   const radioBookmarks = document.querySelectorAll('input[type="radio"]');
   for (const radioBookmark of radioBookmarks) {
     if (radioBookmark.checked) {
       const bookmarks = getBookmarks();
-      const indexToRemove = bookmarks.findIndex(i => i.name == radioBookmark.value && i.category === categorySelect.value);
+      const indexToRemove = bookmarks.findIndex(
+        (i) =>
+          i.name == radioBookmark.value && i.category === categorySelect.value,
+      );
       bookmarks.splice(indexToRemove, 1);
       localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
-      return
+      return;
     }
   }
-}
+};
 
+addBookmarkBtn.addEventListener("click", () => {
+  categoryHeading[0].innerText =
+    categorySelect.value.slice(0, 1).toUpperCase() +
+    categorySelect.value.slice(1);
+  displayOrCloseForm();
+});
 
+closeFormBtn.addEventListener("click", () => displayOrCloseForm());
 
-addBookmarkBtn.addEventListener('click', () => {
-  categoryHeading[0].innerText = categorySelect.value.slice(0, 1).toUpperCase()  
-  + categorySelect.value.slice(1) 
-  displayOrCloseForm(); 
-})
-
-closeFormBtn.addEventListener('click', () => displayOrCloseForm()); 
-
-addBookmarkBtnForm.addEventListener('click', () => {
-  const formInputsContainValues = nameInput.value || urlInput.value; 
+addBookmarkBtnForm.addEventListener("click", () => {
+  const formInputsContainValues = nameInput.value || urlInput.value;
   if (formInputsContainValues) {
-    updateBookmarks(); 
+    updateBookmarks();
     displayOrCloseForm();
     reset();
   } else {
-    alert('Please, provide valid name and URL.')
+    alert("Please, provide valid name and URL.");
   }
-  console.log(getBookmarks())
+  console.log(getBookmarks());
 });
 
-viewCategoryBtn.addEventListener('click', () => {
-  categoryHeading[1].innerText = categorySelect.value.slice(0, 1).toUpperCase()
-  + categorySelect.value.slice(1);  
+viewCategoryBtn.addEventListener("click", () => {
+  categoryHeading[1].innerText =
+    categorySelect.value.slice(0, 1).toUpperCase() +
+    categorySelect.value.slice(1);
 
   fillBookmarkList();
-  displayOrHideCategory(); 
-})
+  displayOrHideCategory();
+});
 
-closeListBtn.addEventListener('click', () => {
-  displayOrHideCategory();  
-})
+closeListBtn.addEventListener("click", () => {
+  displayOrHideCategory();
+});
 
-deleteBookmarkBtn.addEventListener('click', () => {
+deleteBookmarkBtn.addEventListener("click", () => {
   deleteBookmark();
   fillBookmarkList();
-})
+});
